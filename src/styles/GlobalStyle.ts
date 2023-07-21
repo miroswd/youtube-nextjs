@@ -1,4 +1,7 @@
 import { createGlobalStyle } from "styled-components/";
+import color from "@/constants/colors";
+
+const { BLACK, WHITE } = color;
 
 export default createGlobalStyle`
   * {
@@ -9,9 +12,7 @@ export default createGlobalStyle`
   };
 
   body {
-    background-color: #0F0F0F;
-    color: #F1F1F1;
+    background-color: ${BLACK};
+    color: ${WHITE};
   }
-
- 
 `;
