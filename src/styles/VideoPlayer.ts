@@ -27,25 +27,7 @@ interface IControlsShowHide {
 export const VideoContainer = styled.div<IVideoProps>`
     position: relative;
 
-    @media (min-width: 1024px) {
-        width: 100%;
-        max-height: 100%;
-    }
-
-    @media (min-width:769px) and (max-width: 1024px) {
-        width: 560px;
-        max-height: 524px;
-    }
-
-    @media (min-width:321px) and (max-width: 768px) {
-        width: 932px;
-        max-height: 524px;
-    }
-
-    @media (max-width:320px) {
-        width: 932px;
-        max-height: 524px;
-    }
+    width:  1209px;
 
     video {
         width: ${props => props.isFullScreen ? '100vw' : '100%'};
