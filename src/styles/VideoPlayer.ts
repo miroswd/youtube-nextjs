@@ -3,6 +3,11 @@ import color from "@/constants/colors";
 import { ShowHideEnum } from "@/components/VideoPlayer";
 
 const { RED, WHITE } = color;
+
+interface IVideoProps {
+    isFullScreen: boolean;
+}
+
 interface IVolumeProps {
     volume: number;
 };
@@ -12,19 +17,61 @@ interface IVideoProgressProps {
 }
 
 interface IVideoBufferProgressProps {
-    bufferProgress: number;
+    buffer: number;
 }
 
 interface IControlsShowHide {
     action: ShowHideEnum
 }
 
-export const VideoContainer = styled.div`
+export const VideoContainer = styled.div<IVideoProps>`
     position: relative;
-    width: 1024px;
+
+    @media (min-width: 1024px) {
+        width: 100%;
+        max-height: 100%;
+    }
+
+    @media (min-width:769px) and (max-width: 1024px) {
+        width: 560px;
+        max-height: 524px;
+    }
+
+    @media (min-width:321px) and (max-width: 768px) {
+        width: 932px;
+        max-height: 524px;
+    }
+
+    @media (max-width:320px) {
+        width: 932px;
+        max-height: 524px;
+    }
 
     video {
-        width: 100%;
+        width: ${props => props.isFullScreen ? '100vw' : '100%'};
+        height: ${props => props.isFullScreen ? '100vh' : '100%'};
+        margin: auto 0;
+    }
+
+    video::-webkit-media-controls {
+        display: none !important;
+    }
+
+    video::-webkit-media-controls-fullscreen-button {
+    display: block;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 5px;
+    border: none;
+    border-radius: 5px;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    color: white;
+    cursor: pointer;
+    }
+
+    video::-webkit-media-controls-fullscreen-button:hover {
+    background: rgba(0, 0, 0, 0.8);
     }
 `;
 
@@ -45,6 +92,8 @@ export const ControlsContainer = styled.div<IControlsShowHide>`
     visibility: show;
     transition: opacity 400ms ease;
   `}
+
+
 `;
 
 export const ControlsGroup = styled.div`
@@ -75,7 +124,7 @@ export const LeftItems = styled.div`
     display: flex;
     align-items: center;
 
-    width: 40%;
+    width: 50%;
 
     svg { 
       margin-right: 24px;
@@ -141,6 +190,7 @@ export const Duration = styled.div`
     align-items: center;
     justify-content: center;
 
+
     font-weight: 400;
     font-size: 12px;
 `;
@@ -150,6 +200,7 @@ export const FakeProgressBarContainer = styled.div`
     width: 100%;
     position: absolute;
     bottom: 48px;
+
     
     display: flex;
     align-items: flex-end;
@@ -181,11 +232,12 @@ export const Progress = styled.div<IVideoProgressProps>`
     width: ${props => `calc(${props.progress}%)`}; 
     height: 100%;
     background-color: ${RED};
+    position: relative;
     z-index: 1;
 `;
 
 export const BufferProgress = styled.div<IVideoBufferProgressProps>`
-   width: ${props => `calc(${props.bufferProgress}%)`}; 
+   width: ${props => `calc(${props.buffer}%)`}; 
    height: 100%;
    background-color: ${WHITE}40;
    position: absolute;
