@@ -113,10 +113,6 @@ export default function VideoPlayer({ id }: IVideoPlayer) {
     }; 
   }, [currentVideo, volume, showHideControls, previousStatusControls, playingVideo, videoContainer]);
 
-
-
-
-
   const handleVolumeControl = useCallback(() => {
     if (currentVolumeControl && currentVideo) {
       setVolume(Number(currentVolumeControl.value))
@@ -146,17 +142,10 @@ export default function VideoPlayer({ id }: IVideoPlayer) {
   const handleProgressBarClick = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
     if (currentVideo) {
       const progressBarWidth = event.currentTarget.offsetWidth;
-      const clickPosition = event.clientX - event.currentTarget.offsetLeft;
+      const clickPosition = event.clientX - event.currentTarget.getBoundingClientRect().left;
       const percentageClicked = clickPosition / progressBarWidth;
       const newTime = currentVideo.duration * percentageClicked;
-      currentVideo.currentTime = newTime;
-
-      console.log({
-        progressBarWidth,
-        clickPosition,
-        percentageClicked,
-        newTime
-      })
+      currentVideo.currentTime = newTime;     
     }
   }, [currentVideo]);
 
@@ -173,7 +162,7 @@ export default function VideoPlayer({ id }: IVideoPlayer) {
         ref={videoContainerRef}
         isFullScreen={isFullScreen}
         >
-        {progress} {'>>>>>>>'} {bufferedProgress}
+        
         <video
           ref={videoRef}
           id="video"
@@ -191,9 +180,9 @@ export default function VideoPlayer({ id }: IVideoPlayer) {
           onMouseLeave={() => setMouseMoveControls(false)}
         >
 
-        <FakeProgressBarContainer onClick={e => handleProgressBarClick(e)}>
+        <FakeProgressBarContainer>
           <ProgressBarContainer>
-            <ProgressBar>
+            <ProgressBar onClick={e => handleProgressBarClick(e)}>
               <Progress progress={progress} />
               <BufferProgress buffer={bufferedProgress} />
             </ProgressBar>

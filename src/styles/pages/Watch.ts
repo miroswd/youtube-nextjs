@@ -6,7 +6,7 @@ export const Layout = styled.div`
 
 export const Container = styled.div`
   width: 1024px;
-  /* margin: 4% 5%; */
+  margin: 4% 5%;
 `;
 
 export const Title = styled.h1`
