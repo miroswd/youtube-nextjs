@@ -41,17 +41,23 @@ export const DescriptionContainer = styled.div<IShowMoreLinesProps>`
     padding-bottom: 32px;
     max-height: 100%;
   `} 
+
+  
 `;
 
 export const UpInfo = styled.div`
   display: flex;
   width: 100%;
 
-  & > span {
+   span {
     margin-right: 8px;
   }
 
   font-weight: 500;
+
+  @media (max-width: 500px) {
+    flex-direction: column;
+  }
 `;
 
 export const Views = styled.span`
@@ -60,22 +66,29 @@ export const Views = styled.span`
 export const PostDate = styled.span`
 `;
 
-export const TagsContainer = styled.div``;
+export const TagsContainer = styled.div`
+  span {
+    margin-right: 4px;
+    color: ${GRAY_TEXT};
+  }
 
-export const Tag = styled.span`
-  margin-right: 4px;
-  color: ${GRAY_TEXT};
+  @media (max-width: 500px) {
+    margin-top: 4px;
+  }
 `;
 
 export const Description = styled.div`
   width: 90%;
   line-height: 20px;
-
 `;
 
 export const Line = styled.p`
   font-weight: 400;
-  margin-top: 10px;
+  margin-top: 8px;
+
+  @media (max-width: 500px) {
+    margin-top: 4px;
+  }
 `;
 
 

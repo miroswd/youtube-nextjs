@@ -1,4 +1,4 @@
-import { Description, DescriptionContainer, Line, PostDate, ShowMoreLine, Tag, TagsContainer, UpInfo, Views } from "@/styles/VideoDescription";
+import { Description, DescriptionContainer, Line, PostDate, ShowMoreLine, TagsContainer, UpInfo, Views } from "@/styles/VideoDescription";
 import { useCallback, useEffect, useState } from "react";
 
 interface IVideoDescriptionProps {
@@ -15,16 +15,19 @@ export default function VideoDescription({
   description
 }: IVideoDescriptionProps) {
 
+
   const lines = description.split('\n');
   const moreThanThreeLines = lines.length > 3;
   const [showMore, setShowMore] = useState(true);
   const [lastLineChars, setLastLineChars] = useState(0);
 
+  
   useEffect(() => {
     if (moreThanThreeLines) {
       setLastLineChars(lines[1].length);
     }
-  }, [moreThanThreeLines, lines])
+  }, [moreThanThreeLines, lines]);
+
 
   const handleShowMore = useCallback(() => {
     setShowMore(!showMore)
@@ -38,13 +41,16 @@ export default function VideoDescription({
     >
 
       <UpInfo>
-      <Views>{views} de visualizações</Views>
-      <PostDate>há {postDate}</PostDate>
-      <TagsContainer>
-        {tags.map(tag => (
-          <Tag key={tag}>#{tag}</Tag>
-        ))}
-      </TagsContainer>
+        <div>
+          <Views>{views} de visualizações</Views>
+          <PostDate>há {postDate}</PostDate>
+        </div>
+        <TagsContainer>
+          {tags.map(tag => (
+            <span key={tag}>#{tag}</span>
+          ))}
+        </TagsContainer>
+
       </UpInfo>
 
       
