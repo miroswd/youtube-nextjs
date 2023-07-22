@@ -14,5 +14,7 @@ export default createGlobalStyle`
   body {
     background-color: ${BLACK};
     color: ${WHITE};
+    font-family: Roboto, sans-serif;
+    font-size: 14px;
   }
 `;
