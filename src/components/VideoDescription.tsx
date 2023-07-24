@@ -15,19 +15,9 @@ export default function VideoDescription({
   description
 }: IVideoDescriptionProps) {
 
-
   const lines = description.split('\n');
   const moreThanThreeLines = lines.length > 3;
   const [showMore, setShowMore] = useState(true);
-  const [lastLineChars, setLastLineChars] = useState(0);
-
-  
-  useEffect(() => {
-    if (moreThanThreeLines) {
-      setLastLineChars(lines[1].length);
-    }
-  }, [moreThanThreeLines, lines]);
-
 
   const handleShowMore = useCallback(() => {
     setShowMore(!showMore)
@@ -37,7 +27,6 @@ export default function VideoDescription({
     <DescriptionContainer 
       showMore={showMore}
       lines={description.length} 
-      charLastLine={lastLineChars}
     >
 
       <UpInfo>
@@ -53,30 +42,45 @@ export default function VideoDescription({
 
       </UpInfo>
 
-      
-      <Description>
+      {
+        showMore ? (
+          <Description>
+          {
+            lines.slice(0,3).map((line, i) => {
+              return i !== 2 ?
+              <Line key={i}>
+                {i && line.trim() === "" ? (<br/>) : line}
+              </Line> : 
+              moreThanThreeLines && (
+                <ShowMoreLine showMore={showMore}>
+                  <Line key={i}>{line}</Line>
+                  <button onClick={handleShowMore}>
+                    Mostrar mais
+                  </button>
+                </ShowMoreLine>
+              )
+            })
+          }
+        </Description> 
+        ) : (
+
+       <Description>
         {
-          lines.map((line, i) => {
-            return i !== 2 ?
-            <Line key={i}>
+          lines.map((line, i) => (
+            <Line  key={i}>
               {i && line.trim() === "" ? (<br/>) : line}
-            </Line> : 
-            moreThanThreeLines && (
-              <ShowMoreLine showMore={showMore}>
-                <Line key={i}>{line}</Line>
-                <button onClick={handleShowMore}>
-                  Mostrar {showMore ? 'mais' : 'menos'}
-                </button>
-              </ShowMoreLine>
-            )
-          })
+            </Line>
+          
+          ))
         }
-
-      </Description>      
-
-
-      
-  
+        <ShowMoreLine showMore={showMore}>
+          <button onClick={handleShowMore}>
+            Mostrar {showMore ? 'mais' : 'menos'}
+          </button>
+        </ShowMoreLine>
+     </Description>   
+        )
+      }
     </DescriptionContainer>
   )
 }

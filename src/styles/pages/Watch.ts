@@ -1,7 +1,7 @@
 import { styled } from "styled-components";
 
 export const Layout = styled.div`
-  width: 100vw;
+  width: 100%;
 `;
 
 export const Container = styled.div`
@@ -22,7 +22,7 @@ export const Container = styled.div`
   }
   
   width: 80%;
-  
+
   margin-top: 4%;
   margin-left: 5%;
 `;
