@@ -9,14 +9,13 @@ interface IShowMoreProps {
 
 interface IShowMoreLinesProps extends IShowMoreProps {
   lines: number;
-  charLastLine: number;
 }
 
 
 export const DescriptionContainer = styled.div<IShowMoreLinesProps>`
   width: 100%;
 
-  margin-top: 24px;
+  margin: 24px auto;
 
   display: flex;
   align-items: flex-start;
@@ -26,12 +25,13 @@ export const DescriptionContainer = styled.div<IShowMoreLinesProps>`
   background-color: ${GRAY};
   
   padding: 16px;
+  padding-right: 24px;
 
   border-radius: 16px;
   overflow-y: hidden;
   position: relative;
   ${props => props.showMore ? css`
-    max-height: 124px;
+    max-height: 132px;
   ` : css`
     button {
       position: absolute;
@@ -40,18 +40,68 @@ export const DescriptionContainer = styled.div<IShowMoreLinesProps>`
 
     padding-bottom: 32px;
     max-height: 100%;
-  `} 
+  `}   
+
+
+  @media (max-width: 700px) {
+    ${props => props.showMore ? css`
+    max-height: 132px;
+
+    div:nth-child(3) > p {
+      display: none;
+    }
+
+    button {
+      margin-top: 8px;
+    }
+
+  ` : css`
+    div:nth-child(3) > p {
+      display: show;
+    }
+
+    button {
+      position: absolute;
+      bottom: 12px;
+      font-weight: 200;
+    }
+
+    padding-bottom: 32px;
+    max-height: 100%;
+  `}   
+  }
+
+  @media (max-width: 500px) {
+    ${props => props.showMore && css`
+      max-height: 240px;
+      overflow-x: auto;
+      `
+    }
+  }
+
+  @media (max-width: 300px) {
+    ${props => props.showMore && css`
+      max-height: 200px;
+      `
+    }
+  }
+
+
 `;
 
 export const UpInfo = styled.div`
   display: flex;
   width: 100%;
 
-  & > span {
+   span {
     margin-right: 8px;
   }
 
   font-weight: 500;
+
+  @media (max-width: 500px) {
+    flex-direction: column;
+  }
 `;
 
 export const Views = styled.span`
@@ -60,22 +110,37 @@ export const Views = styled.span`
 export const PostDate = styled.span`
 `;
 
-export const TagsContainer = styled.div``;
+export const TagsContainer = styled.div`
+  span {
+    margin-right: 4px;
+    color: ${GRAY_TEXT};
+  }
 
-export const Tag = styled.span`
-  margin-right: 4px;
-  color: ${GRAY_TEXT};
+  @media (max-width: 500px) {
+    margin-top: 4px;
+  }
 `;
 
 export const Description = styled.div`
   width: 90%;
   line-height: 20px;
 
+  @media (max-width: 600px) {
+    p {
+      white-space: nowrap;
+    }
+  }
+  
 `;
 
 export const Line = styled.p`
   font-weight: 400;
-  margin-top: 10px;
+  margin-top: 8px;
+
+  @media (max-width: 500px) {
+    margin-top: 4px;
+  }
+
 `;
 
 

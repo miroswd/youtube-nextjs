@@ -27,8 +27,6 @@ interface IControlsShowHide {
 export const VideoContainer = styled.div<IVideoProps>`
     position: relative;
 
-    width:  1209px;
-
     video {
         width: ${props => props.isFullScreen ? '100vw' : '100%'};
         height: ${props => props.isFullScreen ? '100vh' : '100%'};
@@ -98,6 +96,10 @@ export const ControlsGroup = styled.div`
       width: 24px;
       height: auto;
       color: ${WHITE};
+
+      @media (max-width: 450px) {
+        width: 16px;
+      }
   }
 
 `;
@@ -106,14 +108,17 @@ export const LeftItems = styled.div`
     display: flex;
     align-items: center;
 
-    width: 50%;
-
     svg { 
       margin-right: 24px;
+
+      @media (max-width: 450px) {
+        margin-right: 16px;
+      }
     }
 `;
 
-export const RightItems = styled.div``;
+export const RightItems = styled.div`
+`;
 
 export const VolumeContainer = styled.div`
     display: flex;
@@ -123,6 +128,12 @@ export const VolumeContainer = styled.div`
 
     width: 116px;
     margin-right: 24px;
+
+
+    @media (max-width:450px) {
+        width: 40%;
+        margin-right: 12px;
+    }
 `;
 
 export const VolumeControl = styled.input<IVolumeProps>`
@@ -165,6 +176,8 @@ export const VolumeControl = styled.input<IVolumeProps>`
     &[type="range"]::-webkit-slider-runnable-track {
         background-color: inherit;
     }
+
+    
 `;
 
 export const Duration = styled.div`
@@ -175,6 +188,7 @@ export const Duration = styled.div`
 
     font-weight: 400;
     font-size: 12px;
+
 `;
 
 export const FakeProgressBarContainer = styled.div`
