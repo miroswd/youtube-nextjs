@@ -24,7 +24,6 @@ import formatVideoDuration from "@/utils/formatVideoDuration";
 
 type VideoRef = RefObject<HTMLVideoElement>;
 type InputRef = RefObject<HTMLInputElement>;
-type ButtonRef = RefObject<HTMLButtonElement>;
 type DivRef = RefObject<HTMLDivElement>;
 export type ShowHideEnum = 'show' | 'hide';
 
@@ -153,7 +152,7 @@ export default function VideoPlayer({ id }: IVideoPlayer) {
     setShowHideControls(action);
   }, [])
 
-   
+
   return (
     <>
       <VideoContainer
@@ -166,12 +165,13 @@ export default function VideoPlayer({ id }: IVideoPlayer) {
         <video
           ref={videoRef}
           id="video"
+          autoPlay
+          muted={false}
           controls={false}
-          
           onTimeUpdate={handleTimeUpdate}
           onClick={handlePlayOrPauseVideo}
         >
-          <source src={`${process.env.NEXT_PUBLIC_API_URL}/video`}  />
+          <source src={`${process.env.NEXT_PUBLIC_API_URL}/api/${id}`}  />
         </video>
 
         <ControlsContainer 
