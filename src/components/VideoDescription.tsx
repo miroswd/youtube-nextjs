@@ -31,8 +31,8 @@ export default function VideoDescription({
 
       <UpInfo>
         <div>
-          <Views>{views} de visualizações</Views>
-          <PostDate>há {postDate}</PostDate>
+          <Views>{views} {views !== 1 ? 'visualizações' : 'visualização'}</Views>
+          <PostDate>{postDate}</PostDate>
         </div>
         <TagsContainer>
           {tags.map(tag => (
