@@ -39,28 +39,27 @@ export default function VideoPlayer({ id }: IVideoPlayer) {
   const volumeRef: InputRef = useRef(null);
   const videoContainerRef: DivRef = useRef(null);
 
-  const currentVideo = videoRef.current;
-  const currentVolumeControl = volumeRef.current;
-  const videoContainer = videoContainerRef.current;
 
   const [ playingVideo, setPlayingVideo ] = useState(true);
   const [ isFullScreen, setIsFullScreen ] = useState(false);
-  const [ volume, setVolume ] = useState(currentVideo?.volume || 50);
+  const [ volume, setVolume ] = useState(videoRef.current?.volume || 50);
   const [ formattedDuration, setFormattedDuration ] = useState('');
   const [ currentTime, setCurrentTime ] = useState('00:00');
   const [ progress, setProgress ] = useState(0);
   const [ bufferedProgress, setBufferedProgress ] = useState(0);
-  const [ previousVolume, setPreviousVolume ] = useState(currentVideo?.volume || 100);
+  const [ previousVolume, setPreviousVolume ] = useState(videoRef.current?.volume || 100);
   const [ showHideControls, setShowHideControls ] = useState<ShowHideEnum>('show');
   const [ previousStatusControls, setPreviousStatusControls ] = useState<ShowHideEnum>('show');
   const [ mouseMoveControls, setMouseMoveControls ] = useState(false);
+  const [ loading, setLoading ] = useState(false);
+
 
   const handlePlayOrPauseVideo = useCallback(() => {
-    playingVideo ? currentVideo?.pause() : currentVideo?.play();
+    playingVideo ? videoRef.current?.pause() : videoRef.current?.play();
     setShowHideControls('show');
     setPreviousStatusControls('show');
     setPlayingVideo(!playingVideo);
-  },[playingVideo, currentVideo]);
+  },[playingVideo]);
 
   const handleKeyPress = useCallback((keyCode: string) => {
     const actions: KeyActions = {
@@ -74,10 +73,12 @@ export default function VideoPlayer({ id }: IVideoPlayer) {
   const handleFullScreen = useCallback(() => {
     setIsFullScreen(!isFullScreen);
 
+    const videoContainer = videoContainerRef.current;
+
     if (videoContainer) {
       isFullScreen ? document.exitFullscreen() : videoContainer.requestFullscreen();
     }
-  },[isFullScreen, videoContainer]);
+  },[isFullScreen]);
 
   useEffect(() => {
     document.addEventListener('keydown', e => handleKeyPress(e.code));
@@ -88,15 +89,22 @@ export default function VideoPlayer({ id }: IVideoPlayer) {
       }})
   }, [handleKeyPress])
 
-  useEffect(() => {
-    if (currentVideo) {
+  const handleLoadVideo = useCallback(() => {
+    setLoading(true);
+    if (videoRef.current) {
+      const currentVideo = videoRef.current;
       currentVideo.controls = false;
       currentVideo.volume = volume / 100;
 
       const { duration, buffered } = currentVideo;
-      setFormattedDuration(formatVideoDuration(duration));
-      setBufferedProgress((buffered.end(0) / duration) * 100);
 
+      try {
+        setFormattedDuration(formatVideoDuration(duration));
+        setBufferedProgress((buffered.length  / duration) * 100);
+      } finally {
+        setLoading(false);
+      }
+      
       setPreviousStatusControls(showHideControls)
       if(playingVideo && showHideControls !== previousStatusControls) {
         setTimeout(() => {
@@ -108,37 +116,58 @@ export default function VideoPlayer({ id }: IVideoPlayer) {
       showHideControls === 'hide' ?
         currentVideo.style.cursor = 'none' :
         currentVideo.style.cursor = 'default';
-
+        
     }; 
-  }, [currentVideo, volume, showHideControls, previousStatusControls, playingVideo, videoContainer]);
+
+  }, [volume, showHideControls, previousStatusControls, playingVideo]);
 
   const handleVolumeControl = useCallback(() => {
+    const currentVolumeControl = volumeRef.current;
+    const currentVideo = videoRef.current;
+
     if (currentVolumeControl && currentVideo) {
       setVolume(Number(currentVolumeControl.value))
       currentVideo.volume = volume / 100;
     }
 
-  }, [currentVideo, volume, currentVolumeControl]);
+  }, [volume]);
 
 
   const handleMute = useCallback(() => {
     setPreviousVolume(volume || previousVolume);
     volume > 0 ? setVolume(0) : setVolume(previousVolume);
-    
+     
   }, [volume, previousVolume]);
 
-  const handleTimeUpdate = useCallback(() => {
-    if (currentVideo) { 
 
+  useEffect(() => {
+    const currentVolumeControl = volumeRef.current;
+    const currentVideo = videoRef.current;
+
+    if (currentVolumeControl) currentVolumeControl.value = String(volume);
+    if (currentVideo) currentVideo.volume = volume / 100;
+  }, [volume])
+
+  const handleTimeUpdate = useCallback(() => {
+    const currentVideo = videoRef.current;
+
+    if (currentVideo) { 
       const { duration, buffered, currentTime } = currentVideo;
 
       setCurrentTime(formatVideoDuration(currentTime));
-      setProgress((currentTime / duration) * 100);
+      const totalProgress = (currentTime / duration) * 100;
+      setProgress(totalProgress);
       setBufferedProgress((buffered.end(buffered.length - 1) / duration) * 100);
+
+      if (totalProgress === 100) {
+        setPlayingVideo(false)
+      }
     }
-  }, [currentVideo]);
+  }, []);
 
   const handleProgressBarClick = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
+    const currentVideo = videoRef.current;
+    
     if (currentVideo) {
       const progressBarWidth = event.currentTarget.offsetWidth;
       const clickPosition = event.clientX - event.currentTarget.getBoundingClientRect().left;
@@ -146,7 +175,8 @@ export default function VideoPlayer({ id }: IVideoPlayer) {
       const newTime = currentVideo.duration * percentageClicked;
       currentVideo.currentTime = newTime;     
     }
-  }, [currentVideo]);
+  }, []);
+
 
   const handleHideControls = useCallback((action: ShowHideEnum) => {
     setShowHideControls(action);
@@ -154,7 +184,6 @@ export default function VideoPlayer({ id }: IVideoPlayer) {
 
 
   return (
-    <>
       <VideoContainer
         onMouseLeave={() => !mouseMoveControls && playingVideo && handleHideControls('hide')}
         onMouseMove={() => setShowHideControls('show')}
@@ -170,8 +199,9 @@ export default function VideoPlayer({ id }: IVideoPlayer) {
           controls={false}
           onTimeUpdate={handleTimeUpdate}
           onClick={handlePlayOrPauseVideo}
+          onLoadedMetadata={handleLoadVideo}
         >
-          <source src={`${process.env.NEXT_PUBLIC_API_URL}/api/${id}`}  />
+          <source src={`${process.env.NEXT_PUBLIC_API_URL}/api/video/${id}`}  />
         </video>
 
         <ControlsContainer 
@@ -180,14 +210,14 @@ export default function VideoPlayer({ id }: IVideoPlayer) {
           onMouseLeave={() => setMouseMoveControls(false)}
         >
 
-        <FakeProgressBarContainer>
-          <ProgressBarContainer>
-            <ProgressBar onClick={e => handleProgressBarClick(e)}>
-              <Progress progress={progress} />
-              <BufferProgress buffer={bufferedProgress} />
-            </ProgressBar>
-          </ProgressBarContainer>
-        </FakeProgressBarContainer>
+          <FakeProgressBarContainer>
+            <ProgressBarContainer>
+              <ProgressBar onClick={e => handleProgressBarClick(e)}>
+                <Progress progress={progress} />
+                <BufferProgress buffer={bufferedProgress} />
+              </ProgressBar>
+            </ProgressBarContainer>
+          </FakeProgressBarContainer>
 
 
           <ControlsGroup>
@@ -229,9 +259,7 @@ export default function VideoPlayer({ id }: IVideoPlayer) {
           </RightItems>
           </ControlsGroup>
         </ControlsContainer> 
-      </VideoContainer>
-
-    </>
+      </VideoContainer> 
   )
 
 }

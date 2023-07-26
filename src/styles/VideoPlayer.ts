@@ -53,6 +53,10 @@ export const VideoContainer = styled.div<IVideoProps>`
     video::-webkit-media-controls-fullscreen-button:hover {
     background: rgba(0, 0, 0, 0.8);
     }
+
+    width: 1020px;
+    height: 572px;
+    background-color: #000;
 `;
 
 
@@ -61,7 +65,6 @@ export const ControlsContainer = styled.div<IControlsShowHide>`
 
   position: absolute;
   bottom: 0;
-
 
   ${props => props.action === "hide" ? css`
     opacity: 0;
@@ -72,8 +75,6 @@ export const ControlsContainer = styled.div<IControlsShowHide>`
     visibility: show;
     transition: opacity 400ms ease;
   `}
-
-
 `;
 
 export const ControlsGroup = styled.div`

@@ -1,51 +1,80 @@
+import Button from "@/components/Button";
+import Recommendations from "@/components/Recommendations";
 import VideoDescription from "@/components/VideoDescription";
 import VideoPlayer from "@/components/VideoPlayer";
-import { Container, Layout, Title } from "@/styles/pages/Watch";
+import { IVideo } from "@/models/VideoSchema";
+import { Container, Layout, Title, VideoContainer } from "@/styles/pages/Watch";
+import formatPostDate from "@/utils/formatPostDate";
+
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
-const mock = {
-  description: `Song produced by Tyler Smyth and Ronnie Radke
-  Vocal Production: Charles Massabo
-  Song engineered, mixed and mastered by Tyler Smyth
-  Song written by Ronnie Radke, Tyler Smyth, Cody Quistad, Christian Thompson and Tyler Burgess
-  
-  Director: Jensen Noen
-  Producers: Phoenix Vaughn, Tanner Gordon, Veronika Graves, Ruth Devereaux
-  Executive Producers: Frank Borin & Ivanna Borin
-  Production Company: Blesscode Entertainment
-  Cinematographer: Powell Robinson
-  Production Designer: Albina Kim
-  HMU Designer: Olga Tarnovetska
-  Associate Producers: Jessica Harris & Sean Hughes
-  1st AD: Tiffany Waxler
-  Stunt Coordinator & Lead Rigger: Brandon Belieu
-  Burn Coordinator: Julia Utter
-  VFX: Tilt VFX, Alex Verenchyck, Roma VFX
-  Colorist: Dante Pasquinelli  
-  `,
-  postDate: "5 dias",
-  tags: ["fallinginreverse", "2023"],
-  views: 985,
-  title: 'Falling In Reverse - "Watch The World Burn"'
+interface IVideoResponse extends IVideo {
+  createdAt: string
 }
-
 
 export default function Watch() {
   const router = useRouter();
-  const { v: videoId } = router.query;
+  const videoId = router.query.v as string;
+
+  const [firstStage, setFirstStage] = useState(true);
+
+  const [loading, setLoading] = useState(false);
+  const [ videoInfo, setVideoInfo ] = useState<IVideo>({
+    description: "",
+    tags: [""],
+    title: "",
+    videoId: "",
+    postDate: "",
+    views: 0
+  });
+
+
+  useEffect(() => {
+    setLoading(true);
+    const loadData = async () => {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/info/${videoId}`);
+
+      const responseData: IVideoResponse = await response.json();
+
+      const formattedPostDate = formatPostDate(responseData.createdAt)
+
+      setVideoInfo({...responseData, postDate: formattedPostDate});
+
+      setTimeout(() => {
+        setLoading(false);
+      }, 1000)
+    }
+
+    videoId && loadData();
+  }, [videoId])
+
 
   return (
     <Layout>
+     {
+       !loading && videoId ?
+      
     <Container>
+      <VideoContainer>
       <VideoPlayer id={videoId} />
-      <Title>{mock.title}</Title>
+      <Title>{videoInfo.title}</Title>
       <VideoDescription 
-        description={mock.description}
-        postDate={mock.postDate}
-        tags={mock.tags}
-        views={mock.views}
+        description={videoInfo.description}
+        postDate={videoInfo.postDate}
+        tags={videoInfo.tags}
+        views={videoInfo.views}
       />
+      <Button type="button" onClick={() => setFirstStage(!firstStage)} text={(firstStage ? "Desativar" : "Ativar") + " primeiro estágio"} />
+       </VideoContainer>
+
+      {
+          firstStage ? <></> : <Recommendations hideCurrentVideo={videoId}/>
+      }
+      
     </Container>
+      : <h1>Carregando</h1>
+     }
     </Layout>
   )
 }

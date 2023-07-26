@@ -5,6 +5,8 @@ export const Layout = styled.div`
 `;
 
 export const Container = styled.div`
+  display: flex;
+
   @media (max-width: 320px) {
     max-width: 320px;
   }
@@ -20,11 +22,18 @@ export const Container = styled.div`
   @media (min-width: 1024px) {
     max-width: 1024px;
   }
+
+  /* @media (min-width:1600px){ */
+    width: 90%;
+  /* } */
   
-  width: 80%;
 
   margin-top: 4%;
   margin-left: 5%;
+`;
+
+export const VideoContainer = styled.div`
+  margin-right: 24px;
 `;
 
 export const Title = styled.h1`
