@@ -17,4 +17,6 @@ export const ButtonContainer = styled.button`
   &:hover {
     background-color: ${WHITE}40;
   }
+
+  margin-bottom: 24px;
 `;

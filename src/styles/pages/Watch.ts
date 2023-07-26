@@ -6,6 +6,7 @@ export const Layout = styled.div`
 
 export const Container = styled.div`
   display: flex;
+  flex-direction: column;
 
   @media (max-width: 320px) {
     max-width: 320px;
@@ -20,19 +21,16 @@ export const Container = styled.div`
   }
 
   @media (min-width: 1024px) {
+    flex-direction: row;
     max-width: 1024px;
   }
-
-  /* @media (min-width:1600px){ */
-    width: 90%;
-  /* } */
-  
 
   margin-top: 4%;
   margin-left: 5%;
 `;
 
 export const VideoContainer = styled.div`
+  width: 100%;
   margin-right: 24px;
 `;
 

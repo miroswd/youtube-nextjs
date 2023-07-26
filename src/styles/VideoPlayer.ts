@@ -54,8 +54,8 @@ export const VideoContainer = styled.div<IVideoProps>`
     background: rgba(0, 0, 0, 0.8);
     }
 
-    width: 1020px;
-    height: 572px;
+    max-width: 1020px;
+    max-height: 572px;
     background-color: #000;
 `;
 
