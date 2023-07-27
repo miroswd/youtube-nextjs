@@ -201,7 +201,7 @@ export default function VideoPlayer({ id }: IVideoPlayer) {
           onClick={handlePlayOrPauseVideo}
           onLoadedMetadata={handleLoadVideo}
         >
-          <source src={`${process.env.NEXT_PUBLIC_API_URL}/api/video/${id}`}  />
+          <source src={`/api/video/${id}`}  />
         </video>
 
         <ControlsContainer 

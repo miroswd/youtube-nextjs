@@ -40,7 +40,7 @@ export default function Recommendations({ hideCurrentVideo }: IRecommendations) 
   useEffect(() => {
     setLoading(true);
     const loadThumbs = async  () => {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/thumbs/getThumbs`);
+      const response = await fetch(`/api/thumbs/getThumbs`);
 
       const videos: IVideos[] = await response.json();
 
