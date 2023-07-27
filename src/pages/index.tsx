@@ -23,22 +23,10 @@ export default function Home() {
   useEffect(() => {
     setLoading(true);
     const loadThumbs = async  () => {
-      // const response = await fetch(`/api/thumbs/getThumbs`);
+      const response = await fetch(`/api/thumbs/getThumbs`);
 
-      // const videos: IVideos[] = await response.json();
+      const videos: IVideos[] = await response.json();
 
-      const videos = [{
-        "id": "Pd-gp--YgQZFfZVb",
-        "title": "É o Cássio kkkkkkk",
-        "tags": [
-          "Memes",
-          "Futebol"
-        ],
-        "views": 92,
-        "createdAt": "2023-07-25T19:50:04.379Z",
-        "imageLink": "https://storage.googleapis.com/youtube-nextjs-thumbs/Pd-gp--YgQZFfZVb.png"
-      }];
-      
       if (videos) {
         setVideos(videos);
         setLoading(false);

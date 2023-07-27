@@ -1,5 +1,6 @@
 import { VideoSchema } from "@/models/VideoSchema";
 import connectMongo from "@/services/mongo";
+import { redis } from "@/services/redis";
 import { Storage } from "@google-cloud/storage"
 import { NextApiRequest, NextApiResponse } from "next";
 
@@ -12,6 +13,19 @@ export default async function getThumbs(req: NextApiRequest, res: NextApiRespons
 
   if (!GCP_CREDENTIALS || !BUCKET_THUMB_NAME || !NEXT_PUBLIC_THUMB_STORAGE) {
     return res.status(500).json({success: false, message: "Failed to load bucket credentials"})
+  }
+
+
+  const thumbsCache = await redis.get("thumbs");
+
+  if (thumbsCache) {
+    const thumbs: string[] = JSON.parse(thumbsCache);
+
+    const videos = await Promise.all(thumbs.map(async (thumb: string) => {
+      const video = await VideoSchema.find({id: thumb.replace(/\.(png|jpe?g)/gm, '')}, {_id: 0, description: 0, updatedAt: 0, __v: 0});
+      return {...video[0]._doc, imageLink: `${NEXT_PUBLIC_THUMB_STORAGE}/${thumb}`}
+    }))
+    return res.status(200).json(videos);
   }
 
   const { private_key, ...rest_credentials } =  JSON.parse(GCP_CREDENTIALS);
