@@ -66,3 +66,9 @@ export default async function getVideo(req: NextApiRequest, res: NextApiResponse
 
 }
 
+export const config = {
+  api: {
+    bodyParser: false, 
+    timeout: 30000,
+  },
+};

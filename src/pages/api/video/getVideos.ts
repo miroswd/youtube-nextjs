@@ -25,3 +25,10 @@ export default async function getVideos(req: NextApiRequest, res: NextApiRespons
 
   return res.json(metadata)
 };
+
+export const config = {
+  api: {
+    bodyParser: false, 
+    timeout: 30000,
+  },
+};

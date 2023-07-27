@@ -36,3 +36,10 @@ try {
 
 
 }
+
+export const config = {
+  api: {
+    bodyParser: false, 
+    timeout: 30000,
+  },
+};
