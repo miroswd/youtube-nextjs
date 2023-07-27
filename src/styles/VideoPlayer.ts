@@ -33,6 +33,17 @@ export const VideoContainer = styled.div<IVideoProps>`
         margin: auto 0;
     }
 
+    video {
+        ${props => props.isFullScreen ? css`
+            width: 100vw;
+            height: 100vh;
+        ` : css`
+            max-width: 1020px;
+            max-height: 572px;
+        `};
+    }
+
+
     video::-webkit-media-controls {
         display: none !important;
     }
@@ -54,8 +65,8 @@ export const VideoContainer = styled.div<IVideoProps>`
     background: rgba(0, 0, 0, 0.8);
     }
 
-    max-width: 1020px;
-    max-height: 572px;
+  
+
     background-color: #000;
 `;
 
