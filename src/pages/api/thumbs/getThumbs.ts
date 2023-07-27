@@ -5,6 +5,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 
 export default async function getThumbs(req: NextApiRequest, res: NextApiResponse) {
+  console.log("getThumbs")
   connectMongo();
 
   const { GCP_CREDENTIALS, BUCKET_THUMB_NAME, NEXT_PUBLIC_THUMB_STORAGE } = process.env;
@@ -34,4 +35,12 @@ export default async function getThumbs(req: NextApiRequest, res: NextApiRespons
   }))
 
   return res.json(videos);
+};
+
+
+export const config = {
+  api: {
+    bodyParser: false, 
+    timeout: 30000,
+  },
 };
